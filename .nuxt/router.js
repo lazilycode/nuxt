@@ -2,28 +2,78 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import { interopDefault } from './utils'
 
-const _3be068bc = () => interopDefault(import('../pages/api.vue' /* webpackChunkName: "pages/api" */))
-const _471bd0f7 = () => interopDefault(import('../pages/api/_slug.vue' /* webpackChunkName: "pages/api/_slug" */))
-const _4473bf97 = () => interopDefault(import('../pages/examples.vue' /* webpackChunkName: "pages/examples" */))
-const _236950dc = () => interopDefault(import('../pages/examples/_slug.vue' /* webpackChunkName: "pages/examples/_slug" */))
-const _2b379bb8 = () => interopDefault(import('../pages/faq.vue' /* webpackChunkName: "pages/faq" */))
-const _2367d6f3 = () => interopDefault(import('../pages/faq/_slug.vue' /* webpackChunkName: "pages/faq/_slug" */))
-const _bd0063c4 = () => interopDefault(import('../pages/guide.vue' /* webpackChunkName: "pages/guide" */))
-const _d10ab96c = () => interopDefault(import('../pages/guide/release-notes.vue' /* webpackChunkName: "pages/guide/release-notes" */))
-const _6203b64e = () => interopDefault(import('../pages/guide/_slug.vue' /* webpackChunkName: "pages/guide/_slug" */))
-const _27af2fa6 = () => interopDefault(import('../pages/home.vue' /* webpackChunkName: "pages/home" */))
-const _14c8b7a8 = () => interopDefault(import('../pages/home/_slug.vue' /* webpackChunkName: "pages/home/_slug" */))
-const _25bc3e18 = () => interopDefault(import('../pages/index.vue' /* webpackChunkName: "pages/index" */))
+const _4d63835f = () => interopDefault(import('../pages/books.vue' /* webpackChunkName: "pages/books" */))
+const _82cf5f14 = () => interopDefault(import('../pages/repos.vue' /* webpackChunkName: "pages/repos" */))
+const _6da4bfc6 = () => interopDefault(import('../pages/events/all.vue' /* webpackChunkName: "pages/events/all" */))
+const _b8f394f2 = () => interopDefault(import('../pages/index.vue' /* webpackChunkName: "pages/index" */))
+const _0a803aca = () => interopDefault(import('../pages/index/index.vue' /* webpackChunkName: "pages/index/index" */))
+const _07be09ae = () => interopDefault(import('../pages/index/_welcome/_category.vue' /* webpackChunkName: "pages/index/_welcome/_category" */))
 
 Vue.use(Router)
 
-const scrollBehavior = function(to, from, savedPosition) {
-      // savedPosition is only available for popstate navigations (back button)
-      if (savedPosition) {
-        return savedPosition
+if (process.client) {
+  if ('scrollRestoration' in window.history) {
+    window.history.scrollRestoration = 'manual'
+
+    // reset scrollRestoration to auto when leaving page, allowing page reload
+    // and back-navigation from other pages to use the browser to restore the
+    // scrolling position.
+    window.addEventListener('beforeunload', () => {
+      window.history.scrollRestoration = 'auto'
+    })
+
+    // Setting scrollRestoration to manual again when returning to this page.
+    window.addEventListener('load', () => {
+      window.history.scrollRestoration = 'manual'
+    })
+  }
+}
+const scrollBehavior = function (to, from, savedPosition) {
+  // if the returned position is falsy or an empty object,
+  // will retain current scroll position.
+  let position = false
+
+  // if no children detected and scrollToTop is not explicitly disabled
+  if (
+    to.matched.length < 2 &&
+    to.matched.every(r => r.components.default.options.scrollToTop !== false)
+  ) {
+    // scroll to the top of the page
+    position = { x: 0, y: 0 }
+  } else if (to.matched.some(r => r.components.default.options.scrollToTop)) {
+    // if one of the children has scrollToTop option set to true
+    position = { x: 0, y: 0 }
+  }
+
+  // savedPosition is only available for popstate navigations (back button)
+  if (savedPosition) {
+    position = savedPosition
+  }
+
+  return new Promise((resolve) => {
+    // wait for the out transition to complete (if necessary)
+    window.$nuxt.$once('triggerScroll', () => {
+      // coords will be used if no selector is provided,
+      // or if the selector didn't match any element.
+      if (to.hash) {
+        let hash = to.hash
+        // CSS.escape() is not supported with IE and Edge.
+        if (typeof window.CSS !== 'undefined' && typeof window.CSS.escape !== 'undefined') {
+          hash = '#' + window.CSS.escape(hash.substr(1))
+        }
+        try {
+          if (document.querySelector(hash)) {
+            // scroll to anchor by returning the selector
+            position = { selector: hash }
+          }
+        } catch (e) {
+          console.warn('Failed to save scroll position. Please add CSS.escape() polyfill (https://github.com/mathiasbynens/CSS.escape).')
+        }
       }
-      return { x: 0, y: 0 }
-    }
+      resolve(position)
+    })
+  })
+}
 
 export function createRouter() {
   return new Router({
@@ -34,58 +84,29 @@ export function createRouter() {
     scrollBehavior,
 
     routes: [{
-      path: "/api",
-      component: _3be068bc,
-      name: "api",
-      children: [{
-        path: ":slug?",
-        component: _471bd0f7,
-        name: "api-slug"
-      }]
+      path: "/books",
+      component: _4d63835f,
+      name: "books"
     }, {
-      path: "/examples",
-      component: _4473bf97,
-      name: "examples",
-      children: [{
-        path: ":slug?",
-        component: _236950dc,
-        name: "examples-slug"
-      }]
+      path: "/repos",
+      component: _82cf5f14,
+      name: "repos"
     }, {
-      path: "/faq",
-      component: _2b379bb8,
-      name: "faq",
-      children: [{
-        path: ":slug?",
-        component: _2367d6f3,
-        name: "faq-slug"
-      }]
-    }, {
-      path: "/guide",
-      component: _bd0063c4,
-      name: "guide",
-      children: [{
-        path: "release-notes",
-        component: _d10ab96c,
-        name: "guide-release-notes"
-      }, {
-        path: ":slug?",
-        component: _6203b64e,
-        name: "guide-slug"
-      }]
-    }, {
-      path: "/home",
-      component: _27af2fa6,
-      name: "home",
-      children: [{
-        path: ":slug?",
-        component: _14c8b7a8,
-        name: "home-slug"
-      }]
+      path: "/events/all",
+      component: _6da4bfc6,
+      name: "events-all"
     }, {
       path: "/",
-      component: _25bc3e18,
-      name: "index"
+      component: _b8f394f2,
+      children: [{
+        path: "",
+        component: _0a803aca,
+        name: "index"
+      }, {
+        path: ":welcome/:category?",
+        component: _07be09ae,
+        name: "index-welcome-category"
+      }]
     }],
 
     fallback: false

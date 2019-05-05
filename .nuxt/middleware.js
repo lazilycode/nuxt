@@ -1,6 +1,6 @@
 const middleware = {}
 
-middleware['static'] = require('@/middleware/static.js');
-middleware['static'] = middleware['static'].default || middleware['static']
+middleware['auth'] = require('@/middleware/auth.js');
+middleware['auth'] = middleware['auth'].default || middleware['auth']
 
 export default middleware

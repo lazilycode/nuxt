@@ -3,7 +3,7 @@ import Meta from 'vue-meta'
 import { createRouter } from './router.js'
 import NoSsr from './components/no-ssr.js'
 import NuxtChild from './components/nuxt-child.js'
-import NuxtError from '../layouts/error.vue'
+import NuxtError from './components/nuxt-error.vue'
 import Nuxt from './components/nuxt.js'
 import App from './App.js'
 import { setContext, getLocation, getRouteData, normalizeError } from './utils'
@@ -11,14 +11,9 @@ import { createStore } from './store.js'
 
 /* Plugins */
 
-import nuxt_plugin_swregister_685d38da from 'nuxt_plugin_swregister_685d38da' // Source: ./sw.register.js (mode: 'client')
-import nuxt_plugin_nuxticons_b0380144 from 'nuxt_plugin_nuxticons_b0380144' // Source: ./nuxt-icons.js (mode: 'all')
-import nuxt_plugin_libplugin975a12c0_7cf05414 from 'nuxt_plugin_libplugin975a12c0_7cf05414' // Source: ./lib.plugin.975a12c0.js (mode: 'all')
-import nuxt_plugin_docsplugin7b59e43a_69c9769a from 'nuxt_plugin_docsplugin7b59e43a_69c9769a' // Source: ./docs.plugin.7b59e43a.js (mode: 'all')
-import nuxt_plugin_init_5aefaeb1 from 'nuxt_plugin_init_5aefaeb1' // Source: ../plugins/init.js (mode: 'all')
-import nuxt_plugin_intersectionobserverclient_6b6d967c from 'nuxt_plugin_intersectionobserverclient_6b6d967c' // Source: ../plugins/intersection-observer.client.js (mode: 'client')
-import nuxt_plugin_gaclient_594060ae from 'nuxt_plugin_gaclient_594060ae' // Source: ../plugins/ga.client.js (mode: 'client')
-import nuxt_plugin_adblockclient_6cd502f2 from 'nuxt_plugin_adblockclient_6cd502f2' // Source: ../plugins/adblock.client.js (mode: 'client')
+import nuxt_plugin_axios_68aefd92 from 'nuxt_plugin_axios_68aefd92' // Source: ./axios.js (mode: 'all')
+import nuxt_plugin_elementui_d905880e from 'nuxt_plugin_elementui_d905880e' // Source: ../plugins/element-ui (mode: 'all')
+import nuxt_plugin_main_9266bca6 from 'nuxt_plugin_main_9266bca6' // Source: ../plugins/main (mode: 'all')
 
 // Component: <NoSsr>
 Vue.component(NoSsr.name, NoSsr)
@@ -40,7 +35,7 @@ Vue.use(Meta, {
   tagIDKeyName: 'hid' // the property name that vue-meta uses to determine whether to overwrite or append a tag
 })
 
-const defaultTransition = {"name":"page","mode":"out-in","appear":false,"appearClass":"appear","appearActiveClass":"appear-active","appearToClass":"appear-to"}
+const defaultTransition = {"name":"page","mode":"out-in","appear":true,"appearClass":"appear","appearActiveClass":"appear-active","appearToClass":"appear-to"}
 
 async function createApp(ssrContext) {
   const router = await createRouter(ssrContext)
@@ -48,10 +43,6 @@ async function createApp(ssrContext) {
   const store = createStore(ssrContext)
   // Add this.$router into store actions/mutations
   store.$router = router
-
-  // Fix SSR caveat https://github.com/nuxt/nuxt.js/issues/3757#issuecomment-414689141
-  const registerModule = store.registerModule
-  store.registerModule = (path, rawModule, options) => registerModule.call(store, path, rawModule, Object.assign({ preserveState: process.client }, options))
 
   // Create Root instance
 
@@ -158,36 +149,16 @@ async function createApp(ssrContext) {
 
   // Plugin execution
 
-  if (process.client && typeof nuxt_plugin_swregister_685d38da === 'function') {
-    await nuxt_plugin_swregister_685d38da(app.context, inject)
+  if (typeof nuxt_plugin_axios_68aefd92 === 'function') {
+    await nuxt_plugin_axios_68aefd92(app.context, inject)
   }
 
-  if (typeof nuxt_plugin_nuxticons_b0380144 === 'function') {
-    await nuxt_plugin_nuxticons_b0380144(app.context, inject)
+  if (typeof nuxt_plugin_elementui_d905880e === 'function') {
+    await nuxt_plugin_elementui_d905880e(app.context, inject)
   }
 
-  if (typeof nuxt_plugin_libplugin975a12c0_7cf05414 === 'function') {
-    await nuxt_plugin_libplugin975a12c0_7cf05414(app.context, inject)
-  }
-
-  if (typeof nuxt_plugin_docsplugin7b59e43a_69c9769a === 'function') {
-    await nuxt_plugin_docsplugin7b59e43a_69c9769a(app.context, inject)
-  }
-
-  if (typeof nuxt_plugin_init_5aefaeb1 === 'function') {
-    await nuxt_plugin_init_5aefaeb1(app.context, inject)
-  }
-
-  if (process.client && typeof nuxt_plugin_intersectionobserverclient_6b6d967c === 'function') {
-    await nuxt_plugin_intersectionobserverclient_6b6d967c(app.context, inject)
-  }
-
-  if (process.client && typeof nuxt_plugin_gaclient_594060ae === 'function') {
-    await nuxt_plugin_gaclient_594060ae(app.context, inject)
-  }
-
-  if (process.client && typeof nuxt_plugin_adblockclient_6cd502f2 === 'function') {
-    await nuxt_plugin_adblockclient_6cd502f2(app.context, inject)
+  if (typeof nuxt_plugin_main_9266bca6 === 'function') {
+    await nuxt_plugin_main_9266bca6(app.context, inject)
   }
 
   // If server-side, wait for async component to be resolved first

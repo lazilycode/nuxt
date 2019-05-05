@@ -1,18 +1,14 @@
 import Vue from 'vue'
 import NuxtLoading from './components/nuxt-loading.vue'
 
-import '../node_modules/normalize.css/normalize.css'
-
-import '../node_modules/highlight.js/styles/github.css'
-
-import '../assets/scss/main.scss'
+import '../assets/stylus/main.styl'
 
 import _6f6c098b from '../layouts/default.vue'
 
 const layouts = { "_default": _6f6c098b }
 
 export default {
-  head: {"meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"hid":"mobile-web-app-capable","name":"mobile-web-app-capable","content":"yes"},{"hid":"apple-mobile-web-app-title","name":"apple-mobile-web-app-title","content":"nuxtjs.org"},{"hid":"author","name":"author","content":"alexchopin"},{"hid":"description","name":"description","content":"Nuxt.js official website"},{"hid":"theme-color","name":"theme-color","content":"#41B883"},{"hid":"og:type","name":"og:type","property":"og:type","content":"website"},{"hid":"og:title","name":"og:title","property":"og:title","content":"nuxtjs.org"},{"hid":"og:site_name","name":"og:site_name","property":"og:site_name","content":"nuxtjs.org"},{"hid":"og:description","name":"og:description","property":"og:description","content":"Nuxt.js official website"}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"},{"rel":"preconnect","href":"https:\u002F\u002Fwww.google-analytics.com"},{"rel":"manifest","href":"\u002F_nuxt\u002Fmanifest.85802404.json"},{"rel":"shortcut icon","href":"\u002F_nuxt\u002Ficons\u002Ficon_64.ew0w20g0000.png"},{"rel":"apple-touch-icon","href":"\u002F_nuxt\u002Ficons\u002Ficon_512.ew0w20g0000.png","sizes":"512x512"}],"style":[],"script":[],"title":"nuxtjs.org","htmlAttrs":{"lang":"en"}},
+  head: {"title":"nuxt-demo","meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"hid":"description","name":"description","content":"My brilliant Nuxt.js project"}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"}],"style":[],"script":[]},
 
   render(h, props) {
     const loadingEl = h('NuxtLoading', { ref: 'loading' })
